@@ -1,0 +1,275 @@
+{
+  "product": {
+    "overview": "Overview",
+    "canaries": "Canaries",
+    "triggers": "Triggers",
+    "setup": "Setup",
+    "members": "Members",
+    "signIn": "Sign-in",
+    "apiTokens": "API tokens",
+    "account": "Account",
+    "loading": "Loading",
+    "reading": "Reading the canaries and their triggers."
+  },
+  "kinds": {
+    "url": "URL",
+    "dns": "DNS",
+    "aws-key": "AWS key"
+  },
+  "states": {
+    "armed": "Armed",
+    "triggered": "Triggered",
+    "disabled": "Turned off"
+  },
+  "statuses": {
+    "open": "Needs a look",
+    "confirmed": "Breach",
+    "test": "Test"
+  },
+  "channels": {
+    "http": "URL called",
+    "dns": "Name looked up",
+    "aws": "AWS key used"
+  },
+  "templates": {
+    "link": "Link",
+    "kubeconfig": "Kubeconfig",
+    "env": ".env file",
+    "html": "HTML page",
+    "hostname": "Host name",
+    "ssh-config": "SSH config",
+    "aws-credentials": "AWS credentials file"
+  },
+  "templateHints": {
+    "link": "A URL to paste where only an intruder reads: a wiki page about passwords, a ticket, a bookmark.",
+    "kubeconfig": "A kubeconfig whose cluster is the canary URL. Any kubectl command with it calls the canary.",
+    "env": "A .env file with an admin API address and key. A script or person that tries the API calls the canary.",
+    "html": "A page called passwords.html with an invisible image. Opening it in a browser calls the canary.",
+    "hostname": "A DNS name to paste into a config. Any lookup of it, from anywhere, reaches deception.",
+    "ssh-config": "An SSH config with a bastion host whose name is the canary. Trying ssh bastion looks it up.",
+    "aws-credentials": "An AWS credentials file with a key of a user that may do nothing. CloudTrail shows each use."
+  },
+  "placeholders": {
+    "name": {
+      "link": "Wiki: production passwords",
+      "kubeconfig": "Admin kubeconfig on build server",
+      "env": "Export job .env",
+      "html": "Finance share passwords page",
+      "hostname": "Legacy database host",
+      "ssh-config": "Bastion in ops home",
+      "aws-credentials": "backup-svc AWS key"
+    },
+    "location": {
+      "link": "wiki: Ops / Passwords",
+      "kubeconfig": "/root/.kube/config",
+      "env": "/srv/export/.env",
+      "html": "//fs01/finance/passwords.html",
+      "hostname": "/etc/app/database.yml",
+      "ssh-config": "/home/ops/.ssh/config",
+      "aws-credentials": "~deploy/.aws/credentials"
+    }
+  },
+  "incident": {
+    "failed": "Incident not opened",
+    "pending": "Opening incident"
+  },
+  "search": {
+    "canary": "Canary"
+  },
+  "overviewPage": {
+    "overview": "Overview",
+    "description_one": "{{count}} canary. Nobody has a reason to use one, so each use is worth a look.",
+    "description_other": "{{count}} canaries. Nobody has a reason to use one, so each use is worth a look.",
+    "openTriggers_one": "{{count}} trigger needs a look",
+    "openTriggers_other": "{{count}} triggers need a look",
+    "look": "Look at it",
+    "wasUsedFrom": "{{name}} was used from {{source}} on {{when}}. Nobody has a reason to use it: treat it as a breach until shown otherwise.",
+    "nobodyHasAReason": "Nobody has a reason to use a canary: treat each use as a breach until shown otherwise.",
+    "incidentsFailing_one": "{{count}} trigger has not reached Incidents",
+    "incidentsFailing_other": "{{count}} triggers have not reached Incidents",
+    "incidentsFailingDetail": "Deception tries again for a day. The reason is on each trigger.",
+    "armed": "Armed",
+    "triggered": "Triggered",
+    "needLook": "Need a look",
+    "triggers30Days": "Triggers, 30 days",
+    "lastTrigger": "Last trigger",
+    "never": "Never",
+    "last30Days": "Last 30 days",
+    "last30DaysDetail": "Each day is red when a canary was used, tests left out.",
+    "daysAgo": "{{n}} days ago",
+    "today": "Today",
+    "dayDetail_one": "{{count}} trigger",
+    "dayDetail_other": "{{count}} triggers",
+    "byState": "Canaries by state",
+    "byStateDetail": "Armed, used, or turned off.",
+    "canaries": "canaries",
+    "byKind": "Canaries by kind",
+    "byKindDetail": "How each one calls home.",
+    "latestTriggers": "Latest triggers",
+    "noTriggers": "No triggers",
+    "noTriggersDetail": "No canary has been used. That is how it should stay."
+  },
+  "welcomePage": {
+    "getStarted": "Get started",
+    "description": "A canary is something only an attacker would use. When one is used, deception tells you at once.",
+    "howItWorks": "How it works",
+    "step1": "Make a canary from a template: a kubeconfig, a .env file, an SSH config, an AWS key and more.",
+    "step2": "Plant its bait where an intruder looks: a home directory, a file share, a repository, a wiki.",
+    "step3": "When it is used, deception keeps a trigger with where it came from, and opens an incident if it is linked to Incidents.",
+    "noDns": "DNS canaries are off",
+    "noDnsDetail": "They need a zone delegated to deception. URL and AWS key canaries work without it. See Setup."
+  },
+  "canariesPage": {
+    "newCanary": "New canary",
+    "canary": "Canary",
+    "kind": "Kind",
+    "where": "Where it is planted",
+    "state": "State",
+    "triggers": "Triggers",
+    "lastTrigger": "Last trigger",
+    "canaries": "Canaries",
+    "description": "Tripwires that only an attacker would touch. Each has its own token, so a trigger names the copy that was used.",
+    "triggeredCount_one": "{{count}} triggered",
+    "triggeredCount_other": "{{count}} triggered",
+    "shown": "{{shown}} of {{total}} shown",
+    "search": "Search canaries",
+    "none": "No canaries",
+    "noneDetail": "Make one with New canary, or change the filters."
+  },
+  "bait": {
+    "contents": "The bait",
+    "copy": "Copy",
+    "copied": "Copied",
+    "save": "Save as {{file}}"
+  },
+  "newCanary": {
+    "description": "Pick what the bait looks like, then say where you will plant it, for the alert.",
+    "template": "Template",
+    "noDns": "DNS canaries are off",
+    "noDnsDetail": "Set DECEPTION_DNS_ZONE and delegate the zone to deception first. See Setup.",
+    "name": "Name",
+    "location": "Where it is planted",
+    "locationHint": "A path, share, repository or page, in your words.",
+    "host": "Host",
+    "awsFirst": "Make the key in AWS first",
+    "awsFirstDetail": "Create an IAM user that may do nothing and a key for it, then send its CloudTrail events to deception. The commands are under",
+    "accessKeyId": "Access key ID",
+    "secretAccessKey": "Secret access key",
+    "cancel": "Cancel",
+    "make": "Make canary",
+    "plantIt": "Plant {{name}}",
+    "done": "Done",
+    "plant": {
+      "link": "Paste the link where only an intruder would read it. Opening it calls the canary.",
+      "kubeconfig": "Save it as ~/.kube/config, or next to other kubeconfigs, on the host you named.",
+      "env": "Save it as .env where a script would keep its settings.",
+      "html": "Put the page on the share. Opening it in a browser calls the canary.",
+      "hostname": "Paste the name where a host name belongs, such as a database URL in a config.",
+      "ssh-config": "Save it as ~/.ssh/config, or add it to the one there.",
+      "aws-credentials": "Save it as ~/.aws/credentials on the host you named. The secret is kept sealed; you can show the bait again."
+    }
+  },
+  "canaryDialog": {
+    "state": "State",
+    "address": {
+      "url": "URL",
+      "dns": "Name",
+      "aws-key": "Access key ID"
+    },
+    "noZone": "No DNS zone is set",
+    "made": "Made",
+    "madeBy": "{{when}} by {{who}}",
+    "note": "Note",
+    "enabled": "Armed",
+    "enabledDetail": "A turned-off canary keeps nothing when it is used. Its bait stays the same.",
+    "showBait": "Show the bait",
+    "triggers_one": "{{count}} trigger",
+    "triggers_other": "{{count}} triggers",
+    "save": "Save",
+    "delete": "Delete",
+    "deleteForGood": "Delete for good",
+    "deleteTitle": "Delete this canary?",
+    "deleteDetail": "Its triggers are deleted with it, and a use afterwards leaves nothing. Remove the bait from where it is planted too."
+  },
+  "triggersPage": {
+    "triggers": "Triggers",
+    "description": "Every use of a canary. Uses from the same address within 15 minutes are one trigger.",
+    "when": "When",
+    "canary": "Canary",
+    "deleted": "A deleted canary",
+    "source": "From",
+    "uses": "Uses",
+    "status": "Status",
+    "all": "All",
+    "oneCanary": "Triggers of one canary",
+    "showAll": "Show all",
+    "more": "Show more"
+  },
+  "triggerPage": {
+    "notFound": "Trigger not found",
+    "notFoundDetail": "It may have been deleted with its canary, or after the retention.",
+    "back": "Back to triggers",
+    "description": "Used from {{source}} on {{when}}.",
+    "treatAsBreach": "Treat this as a breach until shown otherwise",
+    "treatAsBreachDetail": "Nobody has a reason to use a canary. Find how the bait was reached: who signed in to the host, and what read the file.",
+    "incidentError": "The incident could not be opened",
+    "whatHappened": "What happened",
+    "dnsSource": "For a DNS canary this is the last resolver that asked, not the person.",
+    "how": "How",
+    "userAgent": "Client",
+    "uses": "Uses",
+    "usesDetail_one": "{{count}} use, on {{first}}",
+    "usesDetail_other": "{{count}} uses, from {{first}} to {{last}}",
+    "planted": "Planted at",
+    "incident": "Incident",
+    "decide": "What was it?",
+    "decideDetail": "A breach stays one. A test needs a reason, such as who ran it; it is noted on the incident.",
+    "decided": {
+      "confirmed": "Marked as a breach by {{who}} on {{when}}",
+      "test": "Marked as a test by {{who}} on {{when}}"
+    },
+    "reason": "Reason",
+    "reasonHint": "Needed for a test.",
+    "confirm": "It is a breach",
+    "markTest": "It was a test",
+    "reopen": "Undecide",
+    "timeline": "Uses",
+    "timelineDetail": "The first 100 uses of this trigger."
+  },
+  "setupPage": {
+    "setup": "Setup",
+    "description": "Where canaries call home, and what each kind needs.",
+    "urls": "URL canaries",
+    "urlsDetail": "They call /c/<token> at this address. Any path answers the same transparent image, so nothing tells the caller it found a canary.",
+    "sameAddress": "Canaries call the address people open deception at, which names the product. Set DECEPTION_CANARY_URL to another name, such as cdn.example.com, behind the same proxy.",
+    "dns": "DNS canaries",
+    "dnsOn": "On, for {{zone}}.",
+    "dnsOff": "Off. Set DECEPTION_DNS_ZONE and delegate the zone to deception.",
+    "aws": "AWS key canaries",
+    "awsDetail": "A key of a user that may do nothing. Deception finds its use in CloudTrail events you send.",
+    "incidents": "Incidents",
+    "incidentsOn": "Each trigger opens an incident in Incidents.",
+    "incidentsOff": "Not linked. Set DECEPTION_INCIDENTS_TOKEN to an Incidents API token with the editor role, and each trigger opens an incident."
+  },
+  "settingsPage": {
+    "adminsOnly": "Admins only",
+    "askAnAdmin": "Ask an admin of this deception.",
+    "signOut": "Sign out",
+    "account": {
+      "title": "Account",
+      "description": "Your profile, password, two-step verification and where you are signed in."
+    },
+    "members": {
+      "title": "Members",
+      "description": "Who can sign in to this deception, and with which role. Viewers see everything; editors also make canaries, see their bait and decide on triggers; admins also delete canaries, and manage members and tokens."
+    },
+    "signin": {
+      "title": "Sign-in",
+      "description": "Identity providers people can sign in with, such as OpenAsy Identity, Keycloak or Microsoft Entra ID, and which of their groups give which role."
+    },
+    "tokens": {
+      "title": "API tokens",
+      "description": "For scripts and CI. Each token has one role and an expiry; the secret is shown once."
+    }
+  }
+}

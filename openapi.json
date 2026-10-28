@@ -1,0 +1,1647 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAsy Deception API",
+    "version": "0.1.0",
+    "summary": "Canaries only an attacker would touch, and every time one was.",
+    "description": "Every screen of deception uses this API, and so can your scripts and pipelines (ADR 0014). Within `/api/v1` changes are additive only; anything removed is deprecated first (ADR 0024). Errors use Problem Details (RFC 9457).\n\nCanary URLs are `/c/<token>`, outside the API: they answer a transparent GIF to anyone, for any path, and keep a trigger when the token is a canary's. Send CloudTrail events with `DECEPTION_INGEST_TOKEN`. Everything else takes the session of a signed-in person or an API token, and each operation names the role it needs (`x-openasy-role`: viewer, editor, admin; ADR 0003).\n\nSign-in, members and API tokens are under `/api/v1/auth`, provided by [@openasy/auth](https://github.com/openasy/auth#routes).",
+    "license": {
+      "name": "AGPL-3.0-only",
+      "identifier": "AGPL-3.0-only"
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "This deception"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Canaries",
+      "description": "Tripwires and their bait."
+    },
+    {
+      "name": "Triggers",
+      "description": "Each use of a canary, and what a person says it was."
+    },
+    {
+      "name": "CloudTrail",
+      "description": "AWS key canaries are found in CloudTrail events."
+    },
+    {
+      "name": "Product",
+      "description": "Version and overview of this deception."
+    }
+  ],
+  "paths": {
+    "/api/v1/canaries": {
+      "get": {
+        "operationId": "listCanaries",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "Canaries",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role. Newest first.",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "url",
+                "dns",
+                "aws-key"
+              ]
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "armed",
+                "triggered",
+                "disabled"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Part of the name, location or host.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The canaries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CanaryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createCanary",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "Make a canary",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role. Makes a canary with a token of its own, and answers with its bait: the file or value to plant.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCanary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The canary and its bait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedCanary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/canaries/{id}": {
+      "get": {
+        "operationId": "getCanary",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "A canary",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The canary's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The canary.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Canary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateCanary",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "Change or turn off a canary",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role. The token and the bait never change.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The canary's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCanary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The canary.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Canary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteCanary",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "Delete a canary",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "admin",
+        "description": "Needs the admin role. Its triggers are deleted with it; a use afterwards leaves nothing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The canary's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/canaries/{id}/bait": {
+      "get": {
+        "operationId": "getBait",
+        "tags": [
+          "Canaries"
+        ],
+        "summary": "A canary's bait",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role, as the bait of an AWS key canary holds its secret. Random filler in it is new each time.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The canary's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The bait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bait"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "409": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/triggers": {
+      "get": {
+        "operationId": "listTriggers",
+        "tags": [
+          "Triggers"
+        ],
+        "summary": "Triggers",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role. Newest first.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "confirmed",
+                "test"
+              ]
+            }
+          },
+          {
+            "name": "canary",
+            "in": "query",
+            "description": "A canary's id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of triggers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/triggers/{id}": {
+      "get": {
+        "operationId": "getTrigger",
+        "tags": [
+          "Triggers"
+        ],
+        "summary": "A trigger and its uses",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The trigger's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The trigger.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "put": {
+        "operationId": "decideTrigger",
+        "tags": [
+          "Triggers"
+        ],
+        "summary": "Say what a trigger was",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "editor",
+        "description": "Needs the editor role. A test needs a reason; when the trigger has an incident, the reason is noted on it.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The trigger's id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecideTrigger"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The trigger.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trigger"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "404": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "422": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/cloudtrail": {
+      "post": {
+        "operationId": "sendCloudTrail",
+        "tags": [
+          "CloudTrail"
+        ],
+        "summary": "Send CloudTrail events",
+        "security": [
+          {
+            "ingestToken": []
+          },
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "description": "Finds the use of AWS key canaries by their access key ID. Takes a CloudTrail log file (`{ Records }`), the answer of `aws cloudtrail lookup-events` (`{ Events }`), EventBridge events (`{ detail }`) or plain events, alone or in an array, optionally gzipped, up to 32 MiB. An event sent again is kept once, by its eventID.\n\n```bash\naws cloudtrail lookup-events --lookup-attributes AttributeKey=AccessKeyId,AttributeValue=AKIA... --start-time \"$(date -u -d '-15 min' +%FT%TZ)\" \\\n  | curl -sf -X POST -H \"Authorization: Bearer $DECEPTION_INGEST_TOKEN\" -H 'content-type: application/json' --data-binary @- \\\n    https://deception.example.com/api/v1/cloudtrail\n```\n\nWith `DECEPTION_INGEST_TOKEN`, or an API token with the editor role.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "What was found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrailResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "413": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/summary": {
+      "get": {
+        "operationId": "getSummary",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Overview",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "x-openasy-role": "viewer",
+        "description": "Needs the viewer role.",
+        "responses": {
+          "200": {
+            "description": "Canaries, triggers of the last 30 days, and how deception is set up.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Summary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/api/v1/version": {
+      "get": {
+        "operationId": "getVersion",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Version",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The running version.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Version"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "operationId": "listProducts",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Other products of this install",
+        "security": [
+          {
+            "session": []
+          },
+          {
+            "apiToken": []
+          },
+          {
+            "adminToken": []
+          }
+        ],
+        "description": "Needs the viewer role.",
+        "responses": {
+          "200": {
+            "description": "From OPENASY_PRODUCTS, for the product switcher.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "403": {
+            "$ref": "#/components/responses/Problem"
+          },
+          "503": {
+            "$ref": "#/components/responses/Problem"
+          }
+        },
+        "x-openasy-role": "viewer"
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "liveness",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Liveness",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The process is running.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "operationId": "readiness",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Readiness",
+        "description": "Ready while the database answers.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Ready to serve.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The database is unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "metrics",
+        "tags": [
+          "Product"
+        ],
+        "summary": "Prometheus metrics",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Metrics in the Prometheus text format.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-openasy-session",
+        "description": "The browser session after signing in (`openasy-session` when deception runs on plain http://localhost). Requests that change something must come from the deception origin."
+      },
+      "apiToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "An API token created under Settings → API tokens (`oa_deception_...`): one role, always an expiry (ADR 0003)."
+      },
+      "adminToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Only when deception is started by its tests or a local script: one shared token with the admin role. A production install does not have it."
+      },
+      "ingestToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "`DECEPTION_INGEST_TOKEN`: for a CloudTrail pipeline. It can send events, nothing else."
+      }
+    },
+    "responses": {
+      "Problem": {
+        "description": "An error, as RFC 9457 Problem Details.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "invalid-token",
+              "invalid-json",
+              "invalid-body",
+              "conflict",
+              "not-found",
+              "not-configured",
+              "payload-too-large",
+              "internal-error",
+              "unauthenticated",
+              "invalid-credentials",
+              "mfa-required",
+              "mfa-setup-required",
+              "forbidden",
+              "cross-site",
+              "rate-limited"
+            ],
+            "description": "Stable; match on this."
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductLink": {
+        "type": "object",
+        "required": [
+          "id",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The product, as OpenAsy names it.",
+            "examples": [
+              "infrastructure"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The address people open it at.",
+            "examples": [
+              "https://infra.example.com"
+            ]
+          }
+        }
+      },
+      "ProductList": {
+        "type": "object",
+        "required": [
+          "products"
+        ],
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductLink"
+            }
+          }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Version": {
+        "type": "object",
+        "required": [
+          "product",
+          "version"
+        ],
+        "properties": {
+          "product": {
+            "const": "deception"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "Canary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "template",
+          "address",
+          "location",
+          "host",
+          "note",
+          "enabled",
+          "state",
+          "triggers",
+          "openTriggers",
+          "lastTriggeredAt",
+          "createdAt",
+          "createdBy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "url",
+              "dns",
+              "aws-key"
+            ],
+            "description": "url: a URL that is called; dns: a name that is looked up; aws-key: an AWS access key that is used."
+          },
+          "template": {
+            "type": "string",
+            "enum": [
+              "link",
+              "kubeconfig",
+              "env",
+              "html",
+              "hostname",
+              "ssh-config",
+              "aws-credentials"
+            ]
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the bait carries: its URL, its DNS name, or its access key ID. Null for a DNS canary while no zone is set."
+          },
+          "location": {
+            "type": "string",
+            "description": "Where it is planted, in your words."
+          },
+          "host": {
+            "type": "string",
+            "description": "The host it is planted on, if any."
+          },
+          "note": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "A turned-off canary keeps nothing when it is used."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "armed",
+              "triggered",
+              "disabled"
+            ],
+            "description": "triggered once a use was not marked as a test."
+          },
+          "triggers": {
+            "type": "integer"
+          },
+          "openTriggers": {
+            "type": "integer"
+          },
+          "lastTriggeredAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "CanaryList": {
+        "type": "object",
+        "required": [
+          "canaries"
+        ],
+        "properties": {
+          "canaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Canary"
+            }
+          }
+        }
+      },
+      "NewCanary": {
+        "type": "object",
+        "required": [
+          "name",
+          "template"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "template": {
+            "type": "string",
+            "enum": [
+              "link",
+              "kubeconfig",
+              "env",
+              "html",
+              "hostname",
+              "ssh-config",
+              "aws-credentials"
+            ],
+            "description": "link, kubeconfig, env and html make a URL canary; hostname and ssh-config a DNS canary (needs DECEPTION_DNS_ZONE); aws-credentials an AWS key canary."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "url",
+              "dns",
+              "aws-key"
+            ],
+            "description": "Optional; must be the template's kind."
+          },
+          "location": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "host": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "accessKeyId": {
+            "type": "string",
+            "description": "For aws-credentials: the access key ID of an IAM user that may do nothing."
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "description": "For aws-credentials: its secret, kept sealed with the secrets key."
+          }
+        }
+      },
+      "UpdateCanary": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "location": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "host": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Bait": {
+        "type": "object",
+        "required": [
+          "file",
+          "content"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "A file name to save it as, or empty for a value to paste."
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatedCanary": {
+        "type": "object",
+        "required": [
+          "canary",
+          "bait"
+        ],
+        "properties": {
+          "canary": {
+            "$ref": "#/components/schemas/Canary"
+          },
+          "bait": {
+            "$ref": "#/components/schemas/Bait"
+          }
+        }
+      },
+      "Trigger": {
+        "type": "object",
+        "required": [
+          "id",
+          "canary",
+          "channel",
+          "source",
+          "userAgent",
+          "detail",
+          "firstAt",
+          "lastAt",
+          "hits",
+          "status",
+          "reason",
+          "decidedBy",
+          "decidedAt",
+          "incident"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "canary": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "id",
+              "name",
+              "kind",
+              "location",
+              "host"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "dns",
+                  "aws-key"
+                ]
+              },
+              "location": {
+                "type": "string"
+              },
+              "host": {
+                "type": "string"
+              }
+            }
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "http",
+              "dns",
+              "aws"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "The caller's address. For DNS, the last resolver that asked, not the person."
+          },
+          "userAgent": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string",
+            "description": "What the first use was, such as GET /c/… or sts:GetCallerIdentity in us-east-1."
+          },
+          "firstAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hits": {
+            "type": "integer",
+            "description": "Uses from the same source within 15 minutes of each other."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "confirmed",
+              "test"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decidedBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decidedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "incident": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The incident in OpenAsy Incidents, when deception is linked to it.",
+            "required": [
+              "state",
+              "key",
+              "url",
+              "error"
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "opened",
+                  "failed"
+                ]
+              },
+              "key": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "TriggerDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Trigger"
+          },
+          {
+            "type": "object",
+            "required": [
+              "timeline"
+            ],
+            "properties": {
+              "timeline": {
+                "type": "array",
+                "description": "The first 100 uses.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "at",
+                    "detail"
+                  ],
+                  "properties": {
+                    "at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "detail": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TriggerList": {
+        "type": "object",
+        "required": [
+          "triggers"
+        ],
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Trigger"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Pass it as cursor for the next page."
+          }
+        }
+      },
+      "DecideTrigger": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "confirmed",
+              "test"
+            ],
+            "description": "confirmed: a breach; test: someone you know, which needs a reason; open: undecided again."
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          }
+        }
+      },
+      "TrailResult": {
+        "type": "object",
+        "required": [
+          "events",
+          "matched",
+          "triggers"
+        ],
+        "properties": {
+          "events": {
+            "type": "integer",
+            "description": "Events with an access key in the body."
+          },
+          "matched": {
+            "type": "integer",
+            "description": "Of those, events of an AWS key canary not seen before."
+          },
+          "triggers": {
+            "type": "integer",
+            "description": "New triggers they made."
+          }
+        }
+      },
+      "Summary": {
+        "type": "object",
+        "required": [
+          "canaries",
+          "triggers",
+          "latest",
+          "incidents",
+          "setup"
+        ],
+        "properties": {
+          "canaries": {
+            "type": "object",
+            "required": [
+              "total",
+              "armed",
+              "triggered",
+              "disabled",
+              "byKind"
+            ],
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "armed": {
+                "type": "integer"
+              },
+              "triggered": {
+                "type": "integer"
+              },
+              "disabled": {
+                "type": "integer"
+              },
+              "byKind": {
+                "type": "object",
+                "required": [
+                  "url",
+                  "dns",
+                  "aws-key"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "integer"
+                  },
+                  "dns": {
+                    "type": "integer"
+                  },
+                  "aws-key": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "triggers": {
+            "type": "object",
+            "required": [
+              "last30Days",
+              "open",
+              "confirmed",
+              "tests",
+              "lastAt",
+              "perDay"
+            ],
+            "properties": {
+              "last30Days": {
+                "type": "integer",
+                "description": "Triggers in the last 30 days, leaving out tests."
+              },
+              "open": {
+                "type": "integer"
+              },
+              "confirmed": {
+                "type": "integer"
+              },
+              "tests": {
+                "type": "integer"
+              },
+              "lastAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "perDay": {
+                "type": "array",
+                "description": "The last 30 days, oldest first.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "date",
+                    "triggers"
+                  ],
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "triggers": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "latest": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Trigger"
+            }
+          },
+          "incidents": {
+            "type": "object",
+            "required": [
+              "on",
+              "failing"
+            ],
+            "properties": {
+              "on": {
+                "type": "boolean"
+              },
+              "failing": {
+                "type": "integer"
+              }
+            }
+          },
+          "setup": {
+            "type": "object",
+            "required": [
+              "canaryUrl",
+              "dnsZone"
+            ],
+            "properties": {
+              "canaryUrl": {
+                "type": "string",
+                "description": "DECEPTION_CANARY_URL."
+              },
+              "dnsZone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "DECEPTION_DNS_ZONE."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

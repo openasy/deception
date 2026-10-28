@@ -1,0 +1,275 @@
+{
+  "product": {
+    "overview": "Genel bakış",
+    "canaries": "Kanaryalar",
+    "triggers": "Tetiklenmeler",
+    "setup": "Kurulum",
+    "members": "Üyeler",
+    "signIn": "Oturum açma",
+    "apiTokens": "API belirteçleri",
+    "account": "Hesap",
+    "loading": "Yükleniyor",
+    "reading": "Kanaryalar ve tetiklenmeleri okunuyor."
+  },
+  "kinds": {
+    "url": "URL",
+    "dns": "DNS",
+    "aws-key": "AWS anahtarı"
+  },
+  "states": {
+    "armed": "Kurulu",
+    "triggered": "Tetiklendi",
+    "disabled": "Kapalı"
+  },
+  "statuses": {
+    "open": "Bakılmalı",
+    "confirmed": "İhlal",
+    "test": "Test"
+  },
+  "channels": {
+    "http": "URL çağrıldı",
+    "dns": "Ad sorgulandı",
+    "aws": "AWS anahtarı kullanıldı"
+  },
+  "templates": {
+    "link": "Bağlantı",
+    "kubeconfig": "Kubeconfig",
+    "env": ".env dosyası",
+    "html": "HTML sayfası",
+    "hostname": "Sunucu adı",
+    "ssh-config": "SSH yapılandırması",
+    "aws-credentials": "AWS kimlik bilgileri dosyası"
+  },
+  "templateHints": {
+    "link": "Yalnızca bir saldırganın okuyacağı yere yapıştırılan bir URL: parolalar hakkında bir wiki sayfası, bir kayıt, bir yer imi.",
+    "kubeconfig": "Kümesi kanarya URL'si olan bir kubeconfig. Onunla çalışan her kubectl komutu kanaryayı çağırır.",
+    "env": "Bir yönetim API'sinin adresini ve anahtarını içeren bir .env dosyası. API'yi deneyen betik ya da kişi kanaryayı çağırır.",
+    "html": "Görünmez bir resim içeren passwords.html adlı bir sayfa. Tarayıcıda açmak kanaryayı çağırır.",
+    "hostname": "Bir yapılandırmaya yapıştırılan DNS adı. Nereden olursa olsun her sorgusu deception'a ulaşır.",
+    "ssh-config": "Adı kanarya olan bir bastion sunucusu içeren SSH yapılandırması. ssh bastion denemek adı sorgular.",
+    "aws-credentials": "Hiçbir şey yapamayan bir kullanıcının anahtarını içeren AWS kimlik bilgileri dosyası. CloudTrail her kullanımı gösterir."
+  },
+  "placeholders": {
+    "name": {
+      "link": "Wiki: üretim parolaları",
+      "kubeconfig": "Derleme sunucusundaki yönetici kubeconfig",
+      "env": "Dışa aktarma işinin .env dosyası",
+      "html": "Finans paylaşımındaki parola sayfası",
+      "hostname": "Eski veritabanı sunucusu",
+      "ssh-config": "ops ev dizinindeki bastion",
+      "aws-credentials": "backup-svc AWS anahtarı"
+    },
+    "location": {
+      "link": "wiki: Ops / Parolalar",
+      "kubeconfig": "/root/.kube/config",
+      "env": "/srv/export/.env",
+      "html": "//fs01/finance/passwords.html",
+      "hostname": "/etc/app/database.yml",
+      "ssh-config": "/home/ops/.ssh/config",
+      "aws-credentials": "~deploy/.aws/credentials"
+    }
+  },
+  "incident": {
+    "failed": "Olay açılamadı",
+    "pending": "Olay açılıyor"
+  },
+  "search": {
+    "canary": "Kanarya"
+  },
+  "overviewPage": {
+    "overview": "Genel bakış",
+    "description_one": "{{count}} kanarya. Hiç kimsenin birini kullanmak için nedeni yok, bu yüzden her kullanım incelenmeye değer.",
+    "description_other": "{{count}} kanarya. Hiç kimsenin birini kullanmak için nedeni yok, bu yüzden her kullanım incelenmeye değer.",
+    "openTriggers_one": "{{count}} tetiklenmeye bakılmalı",
+    "openTriggers_other": "{{count}} tetiklenmeye bakılmalı",
+    "look": "İncele",
+    "wasUsedFrom": "{{name}}, {{when}} tarihinde {{source}} adresinden kullanıldı. Kimsenin onu kullanmak için nedeni yok: aksi gösterilene kadar bir ihlal say.",
+    "nobodyHasAReason": "Kimsenin bir kanaryayı kullanmak için nedeni yok: her kullanımı, aksi gösterilene kadar bir ihlal say.",
+    "incidentsFailing_one": "{{count}} tetiklenme Incidents'a ulaşmadı",
+    "incidentsFailing_other": "{{count}} tetiklenme Incidents'a ulaşmadı",
+    "incidentsFailingDetail": "Deception bir gün boyunca yeniden dener. Nedeni her tetiklenmenin üzerinde.",
+    "armed": "Kurulu",
+    "triggered": "Tetiklenen",
+    "needLook": "Bakılacak",
+    "triggers30Days": "Tetiklenmeler, 30 gün",
+    "lastTrigger": "Son tetiklenme",
+    "never": "Hiç",
+    "last30Days": "Son 30 gün",
+    "last30DaysDetail": "Bir kanaryanın kullanıldığı her gün kırmızıdır; testler sayılmaz.",
+    "daysAgo": "{{n}} gün önce",
+    "today": "Bugün",
+    "dayDetail_one": "{{count}} tetiklenme",
+    "dayDetail_other": "{{count}} tetiklenme",
+    "byState": "Duruma göre kanaryalar",
+    "byStateDetail": "Kurulu, kullanılmış ya da kapalı.",
+    "canaries": "kanarya",
+    "byKind": "Türe göre kanaryalar",
+    "byKindDetail": "Her birinin nasıl haber verdiği.",
+    "latestTriggers": "Son tetiklenmeler",
+    "noTriggers": "Tetiklenme yok",
+    "noTriggersDetail": "Hiçbir kanarya kullanılmadı. Böyle kalması gerekir."
+  },
+  "welcomePage": {
+    "getStarted": "Başlarken",
+    "description": "Kanarya, yalnızca bir saldırganın kullanacağı bir şeydir. Biri kullanıldığında deception hemen haber verir.",
+    "howItWorks": "Nasıl çalışır",
+    "step1": "Bir şablondan kanarya oluştur: kubeconfig, .env dosyası, SSH yapılandırması, AWS anahtarı ve daha fazlası.",
+    "step2": "Yemini bir saldırganın bakacağı yere koy: bir ev dizini, bir dosya paylaşımı, bir depo, bir wiki.",
+    "step3": "Kullanıldığında deception nereden geldiğiyle birlikte bir tetiklenme kaydeder ve Incidents'a bağlıysa bir olay açar.",
+    "noDns": "DNS kanaryaları kapalı",
+    "noDnsDetail": "Deception'a devredilmiş bir bölge gerekir. URL ve AWS anahtarı kanaryaları onsuz çalışır. Kurulum'a bak."
+  },
+  "canariesPage": {
+    "newCanary": "Yeni kanarya",
+    "canary": "Kanarya",
+    "kind": "Tür",
+    "where": "Nereye kondu",
+    "state": "Durum",
+    "triggers": "Tetiklenme",
+    "lastTrigger": "Son tetiklenme",
+    "canaries": "Kanaryalar",
+    "description": "Yalnızca bir saldırganın dokunacağı tuzaklar. Her birinin kendi belirteci var, böylece bir tetiklenme kullanılan kopyayı adlandırır.",
+    "triggeredCount_one": "{{count}} tetiklendi",
+    "triggeredCount_other": "{{count}} tetiklendi",
+    "shown": "{{total}} kanaryadan {{shown}} gösteriliyor",
+    "search": "Kanarya ara",
+    "none": "Kanarya yok",
+    "noneDetail": "Yeni kanarya ile oluştur ya da süzgeçleri değiştir."
+  },
+  "bait": {
+    "contents": "Yem",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "save": "{{file}} olarak kaydet"
+  },
+  "newCanary": {
+    "description": "Yemin neye benzeyeceğini seç, sonra uyarı için onu nereye koyacağını yaz.",
+    "template": "Şablon",
+    "noDns": "DNS kanaryaları kapalı",
+    "noDnsDetail": "Önce DECEPTION_DNS_ZONE'u ayarla ve bölgeyi deception'a devret. Kurulum'a bak.",
+    "name": "Ad",
+    "location": "Nereye kondu",
+    "locationHint": "Bir yol, paylaşım, depo ya da sayfa, kendi sözcüklerinle.",
+    "host": "Sunucu",
+    "awsFirst": "Önce anahtarı AWS'de oluştur",
+    "awsFirstDetail": "Hiçbir şey yapamayan bir IAM kullanıcısı ve ona bir anahtar oluştur, sonra CloudTrail olaylarını deception'a gönder. Komutlar şurada:",
+    "accessKeyId": "Erişim anahtarı kimliği",
+    "secretAccessKey": "Gizli erişim anahtarı",
+    "cancel": "Vazgeç",
+    "make": "Kanarya oluştur",
+    "plantIt": "{{name}} kanaryasını yerleştir",
+    "done": "Tamam",
+    "plant": {
+      "link": "Bağlantıyı yalnızca bir saldırganın okuyacağı yere yapıştır. Açılması kanaryayı çağırır.",
+      "kubeconfig": "Adını verdiğin sunucuda ~/.kube/config olarak ya da diğer kubeconfig'lerin yanına kaydet.",
+      "env": "Bir betiğin ayarlarını tutacağı yere .env olarak kaydet.",
+      "html": "Sayfayı paylaşıma koy. Tarayıcıda açılması kanaryayı çağırır.",
+      "hostname": "Adı, bir sunucu adının yer alacağı yere yapıştır; örneğin bir yapılandırmadaki veritabanı URL'sine.",
+      "ssh-config": "~/.ssh/config olarak kaydet ya da oradakine ekle.",
+      "aws-credentials": "Adını verdiğin sunucuda ~/.aws/credentials olarak kaydet. Gizli anahtar mühürlü tutulur; yemi yeniden gösterebilirsin."
+    }
+  },
+  "canaryDialog": {
+    "state": "Durum",
+    "address": {
+      "url": "URL",
+      "dns": "Ad",
+      "aws-key": "Erişim anahtarı kimliği"
+    },
+    "noZone": "DNS bölgesi ayarlı değil",
+    "made": "Oluşturuldu",
+    "madeBy": "{{when}}, {{who}}",
+    "note": "Not",
+    "enabled": "Kurulu",
+    "enabledDetail": "Kapalı bir kanarya kullanıldığında hiçbir şey kaydetmez. Yemi aynı kalır.",
+    "showBait": "Yemi göster",
+    "triggers_one": "{{count}} tetiklenme",
+    "triggers_other": "{{count}} tetiklenme",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "deleteForGood": "Kalıcı olarak sil",
+    "deleteTitle": "Bu kanarya silinsin mi?",
+    "deleteDetail": "Tetiklenmeleri de silinir ve sonraki bir kullanım iz bırakmaz. Yemi de konduğu yerden kaldır."
+  },
+  "triggersPage": {
+    "triggers": "Tetiklenmeler",
+    "description": "Bir kanaryanın her kullanımı. Aynı adresten 15 dakika içindeki kullanımlar tek bir tetiklenmedir.",
+    "when": "Ne zaman",
+    "canary": "Kanarya",
+    "deleted": "Silinmiş bir kanarya",
+    "source": "Nereden",
+    "uses": "Kullanım",
+    "status": "Durum",
+    "all": "Tümü",
+    "oneCanary": "Tek bir kanaryanın tetiklenmeleri",
+    "showAll": "Tümünü göster",
+    "more": "Daha fazla göster"
+  },
+  "triggerPage": {
+    "notFound": "Tetiklenme bulunamadı",
+    "notFoundDetail": "Kanaryasıyla birlikte ya da saklama süresinden sonra silinmiş olabilir.",
+    "back": "Tetiklenmelere dön",
+    "description": "{{when}} tarihinde {{source}} adresinden kullanıldı.",
+    "treatAsBreach": "Aksi gösterilene kadar bunu bir ihlal say",
+    "treatAsBreachDetail": "Kimsenin bir kanaryayı kullanmak için nedeni yok. Yeme nasıl ulaşıldığını bul: sunucuya kim girdi, dosyayı ne okudu.",
+    "incidentError": "Olay açılamadı",
+    "whatHappened": "Ne oldu",
+    "dnsSource": "Bir DNS kanaryası için bu, kişinin değil, soran son çözümleyicinin adresidir.",
+    "how": "Nasıl",
+    "userAgent": "İstemci",
+    "uses": "Kullanım",
+    "usesDetail_one": "{{count}} kullanım, {{first}}",
+    "usesDetail_other": "{{count}} kullanım, {{first}} ile {{last}} arasında",
+    "planted": "Konduğu yer",
+    "incident": "Olay",
+    "decide": "Neydi?",
+    "decideDetail": "Bir ihlal ihlal olarak kalır. Bir test için neden gerekir, örneğin kimin yaptığı; olayın üzerine not düşülür.",
+    "decided": {
+      "confirmed": "{{who}}, {{when}} tarihinde ihlal olarak işaretledi",
+      "test": "{{who}}, {{when}} tarihinde test olarak işaretledi"
+    },
+    "reason": "Neden",
+    "reasonHint": "Test için gerekir.",
+    "confirm": "Bu bir ihlal",
+    "markTest": "Bu bir testti",
+    "reopen": "Kararı geri al",
+    "timeline": "Kullanımlar",
+    "timelineDetail": "Bu tetiklenmenin ilk 100 kullanımı."
+  },
+  "setupPage": {
+    "setup": "Kurulum",
+    "description": "Kanaryaların nereye haber verdiği ve her türün neye ihtiyaç duyduğu.",
+    "urls": "URL kanaryaları",
+    "urlsDetail": "Bu adresteki /c/<token> yolunu çağırırlar. Her yol aynı saydam resmi döndürür, böylece hiçbir şey çağırana bir kanarya bulduğunu söylemez.",
+    "sameAddress": "Kanaryalar, deception'ın açıldığı ve ürünün adını taşıyan adresi çağırıyor. DECEPTION_CANARY_URL'yi aynı vekilin arkasında başka bir ada, örneğin cdn.example.com'a ayarla.",
+    "dns": "DNS kanaryaları",
+    "dnsOn": "Açık, {{zone}} için.",
+    "dnsOff": "Kapalı. DECEPTION_DNS_ZONE'u ayarla ve bölgeyi deception'a devret.",
+    "aws": "AWS anahtarı kanaryaları",
+    "awsDetail": "Hiçbir şey yapamayan bir kullanıcının anahtarı. Deception kullanımını gönderdiğin CloudTrail olaylarında bulur.",
+    "incidents": "Incidents",
+    "incidentsOn": "Her tetiklenme Incidents'ta bir olay açar.",
+    "incidentsOff": "Bağlı değil. DECEPTION_INCIDENTS_TOKEN'ı Incidents'ın editor rolündeki bir API belirtecine ayarla; her tetiklenme bir olay açar."
+  },
+  "settingsPage": {
+    "adminsOnly": "Yalnızca yöneticiler",
+    "askAnAdmin": "Bu deception'ın bir yöneticisine sor.",
+    "signOut": "Oturumu kapat",
+    "account": {
+      "title": "Hesap",
+      "description": "Profilin, parolan, iki adımlı doğrulama ve oturumunun açık olduğu yerler."
+    },
+    "members": {
+      "title": "Üyeler",
+      "description": "Bu deception'a kimin hangi rolle girebileceği. İzleyiciler her şeyi görür; editörler ayrıca kanarya oluşturur, yemlerini görür ve tetiklenmelere karar verir; yöneticiler ayrıca kanarya siler, üyeleri ve belirteçleri yönetir."
+    },
+    "signin": {
+      "title": "Oturum açma",
+      "description": "OpenAsy Identity, Keycloak ya da Microsoft Entra ID gibi, kişilerin oturum açabileceği kimlik sağlayıcıları ve hangi gruplarının hangi rolü verdiği."
+    },
+    "tokens": {
+      "title": "API belirteçleri",
+      "description": "Betikler ve CI için. Her belirtecin bir rolü ve bir bitiş tarihi vardır; gizli değer bir kez gösterilir."
+    }
+  }
+}

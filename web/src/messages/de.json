@@ -1,0 +1,275 @@
+{
+  "product": {
+    "overview": "Übersicht",
+    "canaries": "Kanarienvögel",
+    "triggers": "Auslösungen",
+    "setup": "Einrichtung",
+    "members": "Mitglieder",
+    "signIn": "Anmeldung",
+    "apiTokens": "API-Token",
+    "account": "Konto",
+    "loading": "Wird geladen",
+    "reading": "Die Kanarienvögel und ihre Auslösungen werden gelesen."
+  },
+  "kinds": {
+    "url": "URL",
+    "dns": "DNS",
+    "aws-key": "AWS-Schlüssel"
+  },
+  "states": {
+    "armed": "Scharf",
+    "triggered": "Ausgelöst",
+    "disabled": "Ausgeschaltet"
+  },
+  "statuses": {
+    "open": "Zu prüfen",
+    "confirmed": "Einbruch",
+    "test": "Test"
+  },
+  "channels": {
+    "http": "URL aufgerufen",
+    "dns": "Name abgefragt",
+    "aws": "AWS-Schlüssel verwendet"
+  },
+  "templates": {
+    "link": "Link",
+    "kubeconfig": "Kubeconfig",
+    "env": ".env-Datei",
+    "html": "HTML-Seite",
+    "hostname": "Hostname",
+    "ssh-config": "SSH-Konfiguration",
+    "aws-credentials": "AWS-Zugangsdatei"
+  },
+  "templateHints": {
+    "link": "Eine URL für Orte, die nur ein Angreifer liest: eine Wiki-Seite zu Passwörtern, ein Ticket, ein Lesezeichen.",
+    "kubeconfig": "Eine Kubeconfig, deren Cluster die Kanarien-URL ist. Jeder kubectl-Befehl damit ruft den Kanarienvogel auf.",
+    "env": "Eine .env-Datei mit Adresse und Schlüssel einer Admin-API. Ein Skript oder eine Person, die die API ausprobiert, ruft den Kanarienvogel auf.",
+    "html": "Eine Seite namens passwords.html mit einem unsichtbaren Bild. Wer sie im Browser öffnet, ruft den Kanarienvogel auf.",
+    "hostname": "Ein DNS-Name für eine Konfiguration. Jede Abfrage, von überall, erreicht deception.",
+    "ssh-config": "Eine SSH-Konfiguration mit einem Bastion-Host, dessen Name der Kanarienvogel ist. ssh bastion fragt ihn ab.",
+    "aws-credentials": "Eine AWS-Zugangsdatei mit dem Schlüssel eines Benutzers, der nichts darf. CloudTrail zeigt jede Verwendung."
+  },
+  "placeholders": {
+    "name": {
+      "link": "Wiki: Produktionspasswörter",
+      "kubeconfig": "Admin-Kubeconfig auf dem Build-Server",
+      "env": ".env des Exportjobs",
+      "html": "Passwortseite auf der Finanzfreigabe",
+      "hostname": "Alter Datenbank-Host",
+      "ssh-config": "Bastion im ops-Verzeichnis",
+      "aws-credentials": "AWS-Schlüssel backup-svc"
+    },
+    "location": {
+      "link": "Wiki: Ops / Passwörter",
+      "kubeconfig": "/root/.kube/config",
+      "env": "/srv/export/.env",
+      "html": "//fs01/finance/passwords.html",
+      "hostname": "/etc/app/database.yml",
+      "ssh-config": "/home/ops/.ssh/config",
+      "aws-credentials": "~deploy/.aws/credentials"
+    }
+  },
+  "incident": {
+    "failed": "Vorfall nicht eröffnet",
+    "pending": "Vorfall wird eröffnet"
+  },
+  "search": {
+    "canary": "Kanarienvogel"
+  },
+  "overviewPage": {
+    "overview": "Übersicht",
+    "description_one": "{{count}} Kanarienvogel. Niemand hat einen Grund, einen zu verwenden, daher ist jede Verwendung einen Blick wert.",
+    "description_other": "{{count}} Kanarienvögel. Niemand hat einen Grund, einen zu verwenden, daher ist jede Verwendung einen Blick wert.",
+    "openTriggers_one": "{{count}} Auslösung ist zu prüfen",
+    "openTriggers_other": "{{count}} Auslösungen sind zu prüfen",
+    "look": "Ansehen",
+    "wasUsedFrom": "{{name}} wurde am {{when}} von {{source}} verwendet. Niemand hat einen Grund dazu: Behandle es als Einbruch, bis das Gegenteil gezeigt ist.",
+    "nobodyHasAReason": "Niemand hat einen Grund, einen Kanarienvogel zu verwenden: Behandle jede Verwendung als Einbruch, bis das Gegenteil gezeigt ist.",
+    "incidentsFailing_one": "{{count}} Auslösung hat Incidents nicht erreicht",
+    "incidentsFailing_other": "{{count}} Auslösungen haben Incidents nicht erreicht",
+    "incidentsFailingDetail": "Deception versucht es einen Tag lang erneut. Der Grund steht bei jeder Auslösung.",
+    "armed": "Scharf",
+    "triggered": "Ausgelöst",
+    "needLook": "Zu prüfen",
+    "triggers30Days": "Auslösungen, 30 Tage",
+    "lastTrigger": "Letzte Auslösung",
+    "never": "Nie",
+    "last30Days": "Letzte 30 Tage",
+    "last30DaysDetail": "Jeder Tag, an dem ein Kanarienvogel verwendet wurde, ist rot; Tests zählen nicht.",
+    "daysAgo": "vor {{n}} Tagen",
+    "today": "Heute",
+    "dayDetail_one": "{{count}} Auslösung",
+    "dayDetail_other": "{{count}} Auslösungen",
+    "byState": "Kanarienvögel nach Zustand",
+    "byStateDetail": "Scharf, verwendet oder ausgeschaltet.",
+    "canaries": "Kanarienvögel",
+    "byKind": "Kanarienvögel nach Art",
+    "byKindDetail": "Wie sich jeder meldet.",
+    "latestTriggers": "Letzte Auslösungen",
+    "noTriggers": "Keine Auslösungen",
+    "noTriggersDetail": "Kein Kanarienvogel wurde verwendet. So soll es bleiben."
+  },
+  "welcomePage": {
+    "getStarted": "Erste Schritte",
+    "description": "Ein Kanarienvogel ist etwas, das nur ein Angreifer verwenden würde. Wird einer verwendet, meldet deception es sofort.",
+    "howItWorks": "So funktioniert es",
+    "step1": "Erstelle einen Kanarienvogel aus einer Vorlage: Kubeconfig, .env-Datei, SSH-Konfiguration, AWS-Schlüssel und mehr.",
+    "step2": "Lege den Köder dort ab, wo ein Eindringling sucht: ein Home-Verzeichnis, eine Dateifreigabe, ein Repository, ein Wiki.",
+    "step3": "Wird er verwendet, hält deception eine Auslösung mit ihrer Herkunft fest und eröffnet einen Vorfall, wenn Incidents verbunden ist.",
+    "noDns": "DNS-Kanarienvögel sind aus",
+    "noDnsDetail": "Sie brauchen eine an deception delegierte Zone. URL- und AWS-Schlüssel-Kanarienvögel funktionieren ohne. Siehe Einrichtung."
+  },
+  "canariesPage": {
+    "newCanary": "Neuer Kanarienvogel",
+    "canary": "Kanarienvogel",
+    "kind": "Art",
+    "where": "Wo er liegt",
+    "state": "Zustand",
+    "triggers": "Auslösungen",
+    "lastTrigger": "Letzte Auslösung",
+    "canaries": "Kanarienvögel",
+    "description": "Stolperdrähte, die nur ein Angreifer berührt. Jeder hat ein eigenes Token, sodass eine Auslösung die verwendete Kopie benennt.",
+    "triggeredCount_one": "{{count}} ausgelöst",
+    "triggeredCount_other": "{{count}} ausgelöst",
+    "shown": "{{shown}} von {{total}} angezeigt",
+    "search": "Kanarienvögel suchen",
+    "none": "Keine Kanarienvögel",
+    "noneDetail": "Erstelle einen mit Neuer Kanarienvogel, oder ändere die Filter."
+  },
+  "bait": {
+    "contents": "Der Köder",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "save": "Als {{file}} speichern"
+  },
+  "newCanary": {
+    "description": "Wähle, wie der Köder aussieht, und sage für die Warnung, wo du ihn ablegst.",
+    "template": "Vorlage",
+    "noDns": "DNS-Kanarienvögel sind aus",
+    "noDnsDetail": "Setze zuerst DECEPTION_DNS_ZONE und delegiere die Zone an deception. Siehe Einrichtung.",
+    "name": "Name",
+    "location": "Wo er liegt",
+    "locationHint": "Ein Pfad, eine Freigabe, ein Repository oder eine Seite, in deinen Worten.",
+    "host": "Host",
+    "awsFirst": "Erstelle den Schlüssel zuerst in AWS",
+    "awsFirstDetail": "Lege einen IAM-Benutzer an, der nichts darf, und einen Schlüssel dafür, und sende dann seine CloudTrail-Ereignisse an deception. Die Befehle stehen unter",
+    "accessKeyId": "Zugriffsschlüssel-ID",
+    "secretAccessKey": "Geheimer Zugriffsschlüssel",
+    "cancel": "Abbrechen",
+    "make": "Kanarienvogel erstellen",
+    "plantIt": "{{name}} ablegen",
+    "done": "Fertig",
+    "plant": {
+      "link": "Füge den Link dort ein, wo nur ein Eindringling liest. Wer ihn öffnet, ruft den Kanarienvogel auf.",
+      "kubeconfig": "Speichere sie als ~/.kube/config oder neben anderen Kubeconfigs auf dem genannten Host.",
+      "env": "Speichere sie als .env dort, wo ein Skript seine Einstellungen ablegt.",
+      "html": "Lege die Seite auf die Freigabe. Wer sie im Browser öffnet, ruft den Kanarienvogel auf.",
+      "hostname": "Füge den Namen dort ein, wo ein Hostname hingehört, etwa in eine Datenbank-URL einer Konfiguration.",
+      "ssh-config": "Speichere sie als ~/.ssh/config oder füge sie der vorhandenen hinzu.",
+      "aws-credentials": "Speichere sie als ~/.aws/credentials auf dem genannten Host. Das Geheimnis wird versiegelt aufbewahrt; du kannst den Köder erneut anzeigen."
+    }
+  },
+  "canaryDialog": {
+    "state": "Zustand",
+    "address": {
+      "url": "URL",
+      "dns": "Name",
+      "aws-key": "Zugriffsschlüssel-ID"
+    },
+    "noZone": "Keine DNS-Zone gesetzt",
+    "made": "Erstellt",
+    "madeBy": "{{when}} von {{who}}",
+    "note": "Notiz",
+    "enabled": "Scharf",
+    "enabledDetail": "Ein ausgeschalteter Kanarienvogel hält nichts fest, wenn er verwendet wird. Sein Köder bleibt gleich.",
+    "showBait": "Köder anzeigen",
+    "triggers_one": "{{count}} Auslösung",
+    "triggers_other": "{{count}} Auslösungen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "deleteForGood": "Endgültig löschen",
+    "deleteTitle": "Diesen Kanarienvogel löschen?",
+    "deleteDetail": "Seine Auslösungen werden mitgelöscht, und eine spätere Verwendung hinterlässt nichts. Entferne auch den Köder, wo er liegt."
+  },
+  "triggersPage": {
+    "triggers": "Auslösungen",
+    "description": "Jede Verwendung eines Kanarienvogels. Verwendungen von derselben Adresse innerhalb von 15 Minuten sind eine Auslösung.",
+    "when": "Wann",
+    "canary": "Kanarienvogel",
+    "deleted": "Ein gelöschter Kanarienvogel",
+    "source": "Von",
+    "uses": "Verwendungen",
+    "status": "Status",
+    "all": "Alle",
+    "oneCanary": "Auslösungen eines Kanarienvogels",
+    "showAll": "Alle anzeigen",
+    "more": "Mehr anzeigen"
+  },
+  "triggerPage": {
+    "notFound": "Auslösung nicht gefunden",
+    "notFoundDetail": "Sie wurde vielleicht mit ihrem Kanarienvogel oder nach der Aufbewahrungsfrist gelöscht.",
+    "back": "Zurück zu den Auslösungen",
+    "description": "Am {{when}} von {{source}} verwendet.",
+    "treatAsBreach": "Behandle dies als Einbruch, bis das Gegenteil gezeigt ist",
+    "treatAsBreachDetail": "Niemand hat einen Grund, einen Kanarienvogel zu verwenden. Finde heraus, wie der Köder erreicht wurde: wer sich am Host angemeldet hat und was die Datei gelesen hat.",
+    "incidentError": "Der Vorfall konnte nicht eröffnet werden",
+    "whatHappened": "Was geschah",
+    "dnsSource": "Bei einem DNS-Kanarienvogel ist das der letzte Resolver, der gefragt hat, nicht die Person.",
+    "how": "Wie",
+    "userAgent": "Client",
+    "uses": "Verwendungen",
+    "usesDetail_one": "{{count}} Verwendung, am {{first}}",
+    "usesDetail_other": "{{count}} Verwendungen, vom {{first}} bis {{last}}",
+    "planted": "Abgelegt in",
+    "incident": "Vorfall",
+    "decide": "Was war es?",
+    "decideDetail": "Ein Einbruch bleibt einer. Ein Test braucht einen Grund, etwa wer ihn durchgeführt hat; er wird am Vorfall vermerkt.",
+    "decided": {
+      "confirmed": "Von {{who}} am {{when}} als Einbruch markiert",
+      "test": "Von {{who}} am {{when}} als Test markiert"
+    },
+    "reason": "Grund",
+    "reasonHint": "Für einen Test nötig.",
+    "confirm": "Es ist ein Einbruch",
+    "markTest": "Es war ein Test",
+    "reopen": "Entscheidung zurücknehmen",
+    "timeline": "Verwendungen",
+    "timelineDetail": "Die ersten 100 Verwendungen dieser Auslösung."
+  },
+  "setupPage": {
+    "setup": "Einrichtung",
+    "description": "Wohin sich Kanarienvögel melden und was jede Art braucht.",
+    "urls": "URL-Kanarienvögel",
+    "urlsDetail": "Sie rufen /c/<token> unter dieser Adresse auf. Jeder Pfad liefert dasselbe transparente Bild, sodass nichts dem Aufrufer verrät, dass er einen Kanarienvogel gefunden hat.",
+    "sameAddress": "Kanarienvögel rufen die Adresse auf, unter der deception geöffnet wird, und die nennt das Produkt. Setze DECEPTION_CANARY_URL auf einen anderen Namen, etwa cdn.example.com, hinter demselben Proxy.",
+    "dns": "DNS-Kanarienvögel",
+    "dnsOn": "An, für {{zone}}.",
+    "dnsOff": "Aus. Setze DECEPTION_DNS_ZONE und delegiere die Zone an deception.",
+    "aws": "AWS-Schlüssel-Kanarienvögel",
+    "awsDetail": "Der Schlüssel eines Benutzers, der nichts darf. Deception findet seine Verwendung in den CloudTrail-Ereignissen, die du sendest.",
+    "incidents": "Incidents",
+    "incidentsOn": "Jede Auslösung eröffnet einen Vorfall in Incidents.",
+    "incidentsOff": "Nicht verbunden. Setze DECEPTION_INCIDENTS_TOKEN auf ein API-Token von Incidents mit der Rolle Editor, dann eröffnet jede Auslösung einen Vorfall."
+  },
+  "settingsPage": {
+    "adminsOnly": "Nur für Admins",
+    "askAnAdmin": "Frage einen Admin dieses deception.",
+    "signOut": "Abmelden",
+    "account": {
+      "title": "Konto",
+      "description": "Dein Profil, Passwort, die Zwei-Schritt-Verifizierung und wo du angemeldet bist."
+    },
+    "members": {
+      "title": "Mitglieder",
+      "description": "Wer sich bei diesem deception anmelden kann, und mit welcher Rolle. Viewer sehen alles; Editoren erstellen außerdem Kanarienvögel, sehen ihre Köder und entscheiden über Auslösungen; Admins löschen außerdem Kanarienvögel und verwalten Mitglieder und Token."
+    },
+    "signin": {
+      "title": "Anmeldung",
+      "description": "Identitätsanbieter, mit denen sich Personen anmelden können, etwa OpenAsy Identity, Keycloak oder Microsoft Entra ID, und welche ihrer Gruppen welche Rolle geben."
+    },
+    "tokens": {
+      "title": "API-Token",
+      "description": "Für Skripte und CI. Jedes Token hat eine Rolle und ein Ablaufdatum; das Geheimnis wird einmal angezeigt."
+    }
+  }
+}
