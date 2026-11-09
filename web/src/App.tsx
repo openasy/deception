@@ -71,7 +71,7 @@ import {
   type TriggerDetail,
   type TriggerStatus,
 } from "./api.ts";
-import { useT } from "./i18n.ts";
+import { useT, viewerLocale, setViewerLocale } from "./i18n.ts";
 import { search } from "./search.ts";
 
 const PAGES = ["canaries", "triggers", "setup", "account", "members", "signin", "tokens", "about"] as const;
@@ -106,8 +106,8 @@ function useApi() {
 }
 type Call = ReturnType<typeof useApi>;
 
-const when = (iso: string) => new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-const day = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
+const when = (iso: string) => new Date(iso).toLocaleString(viewerLocale(), { dateStyle: "medium", timeStyle: "short" });
+const day = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString(viewerLocale(), { month: "short", day: "numeric", timeZone: "UTC" });
 
 const STATE_TONE: Record<CanaryState, Tone> = { armed: "success", triggered: "critical", disabled: "neutral" };
 const STATUS_TONE: Record<TriggerStatus, Tone> = { open: "critical", confirmed: "danger", test: "neutral" };
@@ -1099,6 +1099,7 @@ export function App() {
   const installBrand = useInstallBrand();
   const [theme] = useThemePreference();
   const [locale] = useLocalePreference();
+  setViewerLocale(locale);
   return (
     // The install's brand from config/brand.env (ADR 0053); OpenAsy's own look where it sets none.
     <BrandProvider theme={theme} locale={locale} brand={{ name: "OpenAsy", organization: undefined, ...installBrand }} className="min-h-screen">
