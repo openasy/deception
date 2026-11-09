@@ -1,6 +1,6 @@
 {
   "name": "@openasy/deception",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "OpenAsy Deception: canaries and decoys that only an attacker would touch, so an alert means a breach.",
   "license": "AGPL-3.0-only",
